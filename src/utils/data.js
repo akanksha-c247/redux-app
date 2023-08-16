@@ -1,0 +1,22 @@
+export const userList=[
+    {
+        name:"akanksha",
+        email:"aka@1g.com",
+        id:1
+    },
+    {
+        name:"twinkle",
+        email:"twinkle@1g.com",
+        id:2
+    },
+    {
+        name:"prabha",
+        email:"prabhu@1g.com",
+        id:3
+    },
+    {
+        name:"madhuri",
+        email:"madhu@1g.com",
+        id:4
+    }
+]
