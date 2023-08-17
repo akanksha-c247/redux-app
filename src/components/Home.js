@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,15 +9,32 @@ import TableRow from "@mui/material/TableRow";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { deleteUser } from "../redux/Reducer/UserReducer";
+import axios from "axios";
+import { setUsers } from '../redux/Action';
 
 const Home = () => {
   const users = useSelector((state) => state.users);
+  console.log('users: ', users);
   const dispatch = useDispatch();
-  const handleDelete=(id)=>{
-dispatch(deleteUser({id:parseInt(id)}))
+
+  useEffect(() => {
+    axios.get('https://jsonplaceholder.typicode.com/todos')
+      .then((res) => res.data)
+      .then(json => {
+        console.log('API response:', json); 
+        dispatch(setUsers(json));
+      })
+      .catch(error => {
+        console.error('API error:', error);
+      });
+  }, []);
+
+  const handleDelete = (id) => {
+    dispatch(deleteUser({ id: parseInt(id) }));
   }
+
   return (
     <TableContainer component={Paper}>
       <Link to='/create' variant="contained" color="success">
@@ -27,24 +44,23 @@ dispatch(deleteUser({id:parseInt(id)}))
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Email</TableCell>
+            <TableCell>Title</TableCell>
+            <TableCell>Completed</TableCell>
             <TableCell>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((row) => (
+          {users?.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.id}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.email}</TableCell>
+              <TableCell>{row.title}</TableCell>
+              <TableCell>{row.completed ? "Yes" : "No"}</TableCell>
               <TableCell>
                 <Link to={`/edit/${row.id}`} variant="contained">Edit</Link>
-                <Button variant="outlined" startIcon={<DeleteIcon />} onClick={()=>handleDelete(row.id)}>
+                <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDelete(row.id)}>
                   Delete
                 </Button>
               </TableCell>
-              <TableCell></TableCell>
             </TableRow>
           ))}
         </TableBody>

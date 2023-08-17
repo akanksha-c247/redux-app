@@ -5,15 +5,19 @@ import  Home  from './components/Home';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Create } from './components/Create';
 import { Update } from './components/Update';
+import { SignUp } from './components/authentication/SignUp';
+import { SignIn } from './components/authentication/SignIn';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Home/>}/>
+        <Route path='/Home' element={<Home/>}/>
         <Route path='/create' element={<Create/>}/>
         <Route path='/edit/:id' element={<Update/>}/>
+        <Route path='/signup' element={<SignUp/>}/>
+        <Route path='/' element={<SignIn/>}/>
       </Routes>
       </BrowserRouter>
     </div>

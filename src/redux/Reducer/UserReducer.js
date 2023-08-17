@@ -1,26 +1,59 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { USERS } from "../../utils/constant";
-import { userList } from "../../utils/data";
-
+import { USERS,SET_USERS } from "../../utils/constant";
+import { setUsers } from "../Action";
+// import { userList } from "../../utils/data";
 const userSlice = createSlice({
   name: USERS,
-  initialState: userList,
+  initialState:{
+    userList: [],
+    todos: [],
+    todosPerPage: 10,
+    currentPage: 1
+  }, 
   reducers: {
-    addUser: (state, action) => {
-      state.push(action.payload);
+    onNaviGateOnNext:()=>{},
+    onNavigatePrev:()=>{},
+    onChangePrevPerPage:()=>{},
+    onClickCurrentPage:()=>{},
+
+    addUser : (state, action) => {
+      debugger
+      switch (action.type) {
+        case SET_USERS:
+          return {
+            ...state,
+            users: action.payload,
+          };
+        default:
+          return state;
+      }
     },
+
     updateUser: (state, action) => {
-      const { id, name, email } = action.payload;
-      return state.map(user =>
-        user.id === parseInt(id) ? { ...user, name, email } : user
+      debugger;
+      const { id, name, email } = action?.payload;
+      return state?.map((user) =>
+        user?.id === parseInt(id) ? { ...user, name, email } : user
       );
     },
+
     deleteUser: (state, action) => {
       const { id } = action.payload;
       return state.filter(user => user.id !== parseInt(id));
     },
+
+    addSignupReducer: (state,action)=>{
+      state.push(action.payload);
+    console.log('action: ', action);
+    },
+
+    addSignReducer:(state,action)=>{
+    console.log('action: ', action);
+    state.push(action.payload);  
+    }
+
   }
 });
 
-export const { addUser, updateUser, deleteUser } = userSlice.actions;
+export const { addUser, updateUser, deleteUser, addSignupReducer, addSignReducer } = userSlice.actions;
 export default userSlice.reducer;
