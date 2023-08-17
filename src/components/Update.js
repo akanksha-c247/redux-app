@@ -1,7 +1,7 @@
-import { Button, FormControl, TextField, Typography } from "@mui/material";
+import { Button, FormControl, TextFiel, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { updateUser } from "../redux/Reducer/UserReducer";
 
 export const Update = () => {
@@ -11,9 +11,10 @@ export const Update = () => {
   const existingData = users.filter((fId) => fId.id == id);
   const { name, email } = existingData[0];
   const [formData, seFormData] = useState({
-    name: "",
-    email: "",
+    name:name,
+    email: email,
   });
+  const navigate = useNavigate()
   const handleUpdate = (e) => {
     e.preventDefault();
     dispatch(updateUser({
@@ -21,6 +22,7 @@ export const Update = () => {
         name:formData.name,
         email:formData.email,
     }));
+    navigate('/')
   };
   return (
     <div>
@@ -41,7 +43,7 @@ export const Update = () => {
             label="Email"
             variant="outlined"
             value={formData.email}
-            onChange={(e) => seFormData({ ...formData, name: e.target.value })}
+            onChange={(e) => seFormData({ ...formData, email: e.target.value })}
           />
         </FormControl>
         <FormControl>

@@ -10,9 +10,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
+import { deleteUser } from "../redux/Reducer/UserReducer";
 
 const Home = () => {
   const users = useSelector((state) => state.users);
+  const dispatch = useDispatch();
+  const handleDelete=(id)=>{
+dispatch(deleteUser({id:parseInt(id)}))
+  }
   return (
     <TableContainer component={Paper}>
       <Link to='/create' variant="contained" color="success">
@@ -35,7 +40,7 @@ const Home = () => {
               <TableCell>{row.email}</TableCell>
               <TableCell>
                 <Link to={`/edit/${row.id}`} variant="contained">Edit</Link>
-                <Button variant="outlined" startIcon={<DeleteIcon />}>
+                <Button variant="outlined" startIcon={<DeleteIcon />} onClick={()=>handleDelete(row.id)}>
                   Delete
                 </Button>
               </TableCell>
