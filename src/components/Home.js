@@ -18,6 +18,7 @@ import {
   onClickCurrentPage,
 } from "../redux/Reducer/UserReducer";
 import { fetchPaginationData } from "../redux/paginationThunk";
+import SearchAppBar from "./SearchBar";
 
 const Home = () => {
   const todos = useSelector((state) => state?.USERS?.todos);
@@ -34,6 +35,7 @@ const Home = () => {
   const indexOfLastPage = currentPage * todosPerPage;
   const indexOfFirstPage = indexOfLastPage - todosPerPage;
   const visibleTodos = todos.slice(indexOfFirstPage, indexOfLastPage);
+
   const navigatePrev = () => {
     if (currentPage !== null) {
       dispatch(onNavigatePrev());
@@ -55,6 +57,8 @@ const Home = () => {
   };
 
   return (
+    <div >
+      <SearchAppBar/>
     <Paper elevation={3} style={{ padding: "16px" }}>
       <MuiLink
   component={Link}
@@ -140,6 +144,7 @@ const Home = () => {
         <option value="100">100</option>
       </select>
     </Paper>
+    </div>
   );
 };
 

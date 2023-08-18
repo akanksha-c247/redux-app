@@ -46,7 +46,7 @@ const userSlice = createSlice({
 
     deleteUser: (state, action) => {
       const { id } = action.payload;
-      return state.filter(user => user.id !== parseInt(id));
+      return state.filter(user => user?.id !== parseInt(id));
     },
 
     addSignupReducer: (state,action)=>{

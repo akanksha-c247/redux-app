@@ -7,6 +7,7 @@ import { Create } from './components/Create';
 import { Update } from './components/Update';
 import { SignUp } from './components/authentication/SignUp';
 import { SignIn } from './components/authentication/SignIn';
+import SearchAppBar from './components/SearchBar';
 
 function App() {
   return (
