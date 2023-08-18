@@ -15,6 +15,7 @@ export const Update = () => {
     email: email,
   });
   const navigate = useNavigate()
+
   const handleUpdate = (e) => {
     e.preventDefault();
     dispatch(updateUser({
@@ -24,6 +25,7 @@ export const Update = () => {
     }));
     navigate('/')
   };
+  
   return (
     <div>
       <Typography variant="h3">Update User</Typography>

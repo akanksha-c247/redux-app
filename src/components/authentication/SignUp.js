@@ -35,7 +35,6 @@ export const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
     const userData = {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -51,7 +50,6 @@ export const SignUp = () => {
     dispatch(addSignupReducer(userData));
   };
   
-
   return (
     <div>
       <ThemeProvider theme={defaultTheme}>
