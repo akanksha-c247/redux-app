@@ -1,13 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import Counter from './components/Counter';
-import  Home  from './components/Home';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Create } from './components/Create';
-import { Update } from './components/Update';
-import { SignUp } from './components/authentication/SignUp';
-import { SignIn } from './components/authentication/SignIn';
-import SearchAppBar from './components/SearchBar';
+import Home from './pages/Home';
+import { Create } from './pages/Create';
+import { Update } from './pages/Update';
+import { SignIn } from './pages/authentication/SignIn';
+import { SignUp } from './pages/authentication/SignUp';
 
 function App() {
   return (

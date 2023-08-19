@@ -18,7 +18,8 @@ import {
   onClickCurrentPage,
 } from "../redux/Reducer/UserReducer";
 import { fetchPaginationData } from "../redux/paginationThunk";
-import SearchAppBar from "./SearchBar";
+import SearchAppBar from "../components/SearchBar";
+import FilterComponent from "../components/Filter";
 
 const Home = () => {
   const todos = useSelector((state) => state?.USERS?.todos);
@@ -59,6 +60,7 @@ const Home = () => {
   return (
     <div >
       <SearchAppBar/>
+      <FilterComponent/>
     <Paper elevation={3} style={{ padding: "16px" }}>
       <MuiLink
   component={Link}

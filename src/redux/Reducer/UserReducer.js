@@ -8,6 +8,7 @@ const userSlice = createSlice({
   initialState:{
     userList: [],
     todos: [],
+    usersContainer:[],
     todosPerPage: 10,
     currentPage: 1,
     loading:false
@@ -58,6 +59,13 @@ const userSlice = createSlice({
     console.log('action: ', action);
     state?.push(action.payload);  
     },  
+    filterUsers: (state, action) => {
+      const searchText = action.payload.toLowerCase();
+      state.userList = state.usersContainer.filter(user =>
+        user?.title?.toLowerCase()?.includes(searchText)
+      );
+    },    
+    
   },
 
   extraReducers: {
@@ -67,7 +75,7 @@ const userSlice = createSlice({
     [fetchPaginationData.fulfilled]: (state, action) => {
       state.loading = false;
       state.todos = action.payload; 
-      console.log('action.payload: ', action.payload);
+      state.usersContainer=action.payload
     },
     [fetchPaginationData.rejected]: (state, action) => {
       state.loading = false;
@@ -75,5 +83,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { addUser, updateUser, deleteUser, addSignupReducer, addSignReducer, fetchTodos, onNaviGateOnNext, onNavigatePrev,onChangePrevPerPage,onClickCurrentPage} = userSlice.actions;
+export const {filterUsers, addUser, updateUser, deleteUser, addSignupReducer, addSignReducer, fetchTodos, onNaviGateOnNext, onNavigatePrev,onChangePrevPerPage,onClickCurrentPage} = userSlice.actions;
 export default userSlice.reducer;

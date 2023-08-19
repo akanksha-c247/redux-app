@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useRef} from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -8,6 +8,8 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import {filterUsers} from '../redux/Reducer/UserReducer'
+import { useDispatch } from 'react-redux';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -53,6 +55,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchAppBar() {
     const [searchValue,setSearchValue]=useState()
+  const inputRef=useRef('');
+  const dispatch=useDispatch();
+  const filterUser = () => {
+    dispatch(filterUsers(inputRef.current.value)); 
+}
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -80,7 +87,8 @@ export default function SearchAppBar() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
-              onChange={(e)=>setSearchValue(e)}
+              onChange={filterUser}
+              ref={inputRef}
             />
           </Search>
         </Toolbar>
