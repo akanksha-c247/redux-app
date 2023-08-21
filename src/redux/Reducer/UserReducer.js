@@ -8,14 +8,18 @@ const userSlice = createSlice({
   initialState:{
     userList: [],
     todos: [],
-    usersContainer:[],
-    todosPerPage: 10,
+    originalTodos:[],
+    todosPerPage: 11,
     currentPage: 1,
-    loading:false
+    loading:false,
+    loggedInUser:[]
   }, 
   reducers: {
     fetchTodos:async(state,action)=>{
       state.todos = action.payload;
+    },
+    setOriginalTodos: (state, action) => {
+      state.originalTodos = action.payload;
     },
 
     onNaviGateOnNext:(state)=>{
@@ -35,35 +39,51 @@ const userSlice = createSlice({
     },
 
     addUser: (state, action) => {
-      state.userList =action.payload;
+      debugger;
+      const newDatwaList =[...state.todos]
+      newDatwaList.push(action.payload)
+      state.todos = newDatwaList;
     },
 
     updateUser: (state, action) => {
-      const { id, name, email } = action?.payload;
-      return state?.map((user) =>
-        user?.id === parseInt(id) ? { ...user, name, email } : user
-      );
+      debugger
+      const { id, title, completed,userId } = action?.payload;
+      return {
+        ...state,
+        todos: state.todos.map(user =>
+          user.id === parseInt(id) ? { ...user, title, completed, userId } : user
+        )
+      };
     },
 
     deleteUser: (state, action) => {
+      debugger
       const { id } = action.payload;
-      return state.filter(user => user?.id !== parseInt(id));
+      state.todos=state.todos.filter(user => user?.id !== parseInt(id));
     },
 
     addSignupReducer: (state,action)=>{
-      state.push(action.payload);
+      state.userList.push(action.payload);
     console.log('action: ', action);
     },
 
     addSignReducer:(state,action)=>{
     console.log('action: ', action);
-    state?.push(action.payload);  
+    state?.loggedInUser.push(action.payload);  
     },  
     filterUsers: (state, action) => {
+      debugger;
       const searchText = action.payload.toLowerCase();
-      state.userList = state.usersContainer.filter(user =>
-        user?.title?.toLowerCase()?.includes(searchText)
+
+      // Set the originalTodos if it's empty (first time filtering)
+      if (state.originalTodos.length === 0) {
+        state.originalTodos = state.todos;
+      }
+
+      state.todos = state.originalTodos.filter(user =>
+        user.title?.toLowerCase()?.includes(searchText)
       );
+
     },    
     
   },
@@ -74,8 +94,11 @@ const userSlice = createSlice({
     },
     [fetchPaginationData.fulfilled]: (state, action) => {
       state.loading = false;
+debugger;
+      if(state.todos.length === 0)
       state.todos = action.payload; 
-      state.usersContainer=action.payload
+
+      state.originalTodos=action.payload
     },
     [fetchPaginationData.rejected]: (state, action) => {
       state.loading = false;
@@ -83,5 +106,5 @@ const userSlice = createSlice({
   },
 });
 
-export const {filterUsers, addUser, updateUser, deleteUser, addSignupReducer, addSignReducer, fetchTodos, onNaviGateOnNext, onNavigatePrev,onChangePrevPerPage,onClickCurrentPage} = userSlice.actions;
+export const {setOriginalTodos,filterUsers, addUser, updateUser, deleteUser, addSignupReducer, addSignReducer, fetchTodos, onNaviGateOnNext, onNavigatePrev,onChangePrevPerPage,onClickCurrentPage} = userSlice.actions;
 export default userSlice.reducer;

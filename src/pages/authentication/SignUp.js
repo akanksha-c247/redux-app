@@ -14,6 +14,7 @@ import Container from "@mui/material/Container";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { addSignupReducer } from "../../redux/Reducer/UserReducer";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
@@ -25,7 +26,7 @@ export const SignUp = () => {
     password: "",
   });
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const handleInputChange = ({ target: { name, value } }) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -34,12 +35,15 @@ export const SignUp = () => {
   };
 
   const handleSubmit = (e) => {
+
     e.preventDefault();
     const userData = {
+      customId:1,
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
       password: formData.password,
+
     };
 
     const storedData = localStorage.getItem('storeLoginDetails');
@@ -48,6 +52,7 @@ export const SignUp = () => {
     const updatedData = { ...existingData, ...userData };
     localStorage.setItem('storeLoginDetails', JSON.stringify(updatedData));
     dispatch(addSignupReducer(userData));
+    navigate('/')
   };
   
   return (

@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { addSignReducer } from "../../redux/Reducer/UserReducer";
@@ -25,6 +25,7 @@ export const SignIn = () => {
   });
   const despatch = useDispatch();
   const navigate = useNavigate()
+  const users = useSelector((state) => state?.USERS?.userList);
 
   const handleInputChange = ({ target: { name, value } }) => {
     setFormData((prevData) => ({
@@ -35,21 +36,19 @@ export const SignIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-      const storedLoginDetails = localStorage.getItem("storeLoginDetails");
-    if (storedLoginDetails) {
-      const parsedLoginDetails = JSON.parse(storedLoginDetails);
-      if (
-        formData.email === parsedLoginDetails.email &&
-        formData.password === parsedLoginDetails.password
-      ) {
+    debugger
+    if (users) {
+      const LogedIN =  users.find((user)=>user.email===formData.email && user.password===formData.password);
+      if (LogedIN) {
         despatch(
           addSignReducer({
             email: formData.email,
-            password: formData.password,
+            customId:LogedIN.customId
+            // password: formData.password,
           })
         );
           console.log("Login successful");
-          navigate('/Home')
+          navigate('/home')
       } else {
         console.log("Login failed");
       }

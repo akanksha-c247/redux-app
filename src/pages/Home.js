@@ -23,6 +23,7 @@ import FilterComponent from "../components/Filter";
 
 const Home = () => {
   const todos = useSelector((state) => state?.USERS?.todos);
+  console.log('todos: ', todos);
   const todosPerPage = useSelector((state) => state.USERS.todosPerPage);
   const currentPage = useSelector((state) => state.USERS.currentPage);
   const dispatch = useDispatch();
@@ -54,6 +55,7 @@ const Home = () => {
   };
 
   const handleDelete = (id) => {
+    debugger
     dispatch(deleteUser({ id: parseInt(id) }));
   };
 
@@ -113,7 +115,7 @@ const Home = () => {
                 <TableCell>
                   <MuiLink
                     component={Link}
-                    to={`/edit/${row.id}`}
+                    to={`/create/${row.id}`}
                     variant="contained"
                   >
                     Edit
