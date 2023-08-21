@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { USERS,SET_USERS } from "../../utils/constant";
+import { USERS } from "../../utils/constant";
 import { fetchPaginationData } from "../paginationThunk";
-// import { userList } from "../../utils/data";
 
 const userSlice = createSlice({
   name: USERS,
@@ -12,7 +11,9 @@ const userSlice = createSlice({
     todosPerPage: 11,
     currentPage: 1,
     loading:false,
-    loggedInUser:[]
+    loggedInUser:[],
+    isAuthenticated: false,
+
   }, 
   reducers: {
     fetchTodos:async(state,action)=>{
@@ -39,14 +40,11 @@ const userSlice = createSlice({
     },
 
     addUser: (state, action) => {
-      debugger;
-      const newDatwaList =[...state.todos]
-      newDatwaList.push(action.payload)
-      state.todos = newDatwaList;
+      const newDataList =[...state.todos, action.payload]
+      state.todos = newDataList;
     },
 
     updateUser: (state, action) => {
-      debugger
       const { id, title, completed,userId } = action?.payload;
       return {
         ...state,
@@ -57,25 +55,23 @@ const userSlice = createSlice({
     },
 
     deleteUser: (state, action) => {
-      debugger
       const { id } = action.payload;
       state.todos=state.todos.filter(user => user?.id !== parseInt(id));
     },
 
     addSignupReducer: (state,action)=>{
       state.userList.push(action.payload);
-    console.log('action: ', action);
     },
 
     addSignReducer:(state,action)=>{
-    console.log('action: ', action);
     state?.loggedInUser.push(action.payload);  
-    },  
+    }, 
+    logOutReducer:(state)=>{
+    state.isAuthenticated=false;
+    state.loggedInUser=[]
+    }, 
     filterUsers: (state, action) => {
-      debugger;
       const searchText = action.payload.toLowerCase();
-
-      // Set the originalTodos if it's empty (first time filtering)
       if (state.originalTodos.length === 0) {
         state.originalTodos = state.todos;
       }
@@ -94,7 +90,6 @@ const userSlice = createSlice({
     },
     [fetchPaginationData.fulfilled]: (state, action) => {
       state.loading = false;
-debugger;
       if(state.todos.length === 0)
       state.todos = action.payload; 
 
@@ -106,5 +101,5 @@ debugger;
   },
 });
 
-export const {setOriginalTodos,filterUsers, addUser, updateUser, deleteUser, addSignupReducer, addSignReducer, fetchTodos, onNaviGateOnNext, onNavigatePrev,onChangePrevPerPage,onClickCurrentPage} = userSlice.actions;
+export const {logOutReducer,setOriginalTodos,filterUsers, addUser, updateUser, deleteUser, addSignupReducer, addSignReducer, fetchTodos, onNaviGateOnNext, onNavigatePrev,onChangePrevPerPage,onClickCurrentPage} = userSlice.actions;
 export default userSlice.reducer;

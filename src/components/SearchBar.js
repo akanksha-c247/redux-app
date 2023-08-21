@@ -40,7 +40,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -55,14 +54,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchAppBar() {
   const todos = useSelector((state) => state?.USERS?.todos);
-    const [searchValue,setSearchValue]=useState()
   const inputRef=useRef('');
   const dispatch=useDispatch();
+
   const filterUser = () => {
-    debugger;
     const inputValue = inputRef.current.value;
     dispatch(filterUsers(inputValue)); 
 }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

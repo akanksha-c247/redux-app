@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -36,15 +36,14 @@ export const SignIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    debugger
     if (users) {
-      const LogedIN =  users.find((user)=>user.email===formData.email && user.password===formData.password);
-      if (LogedIN) {
+      const LoggedIN =  users.find((user)=>user.email===formData.email && user.password===formData.password);
+      if (LoggedIN) {
         despatch(
           addSignReducer({
             email: formData.email,
-            customId:LogedIN.customId
-            // password: formData.password,
+            customId:LoggedIN.customId,
+            firstName:formData.firstName
           })
         );
           console.log("Login successful");

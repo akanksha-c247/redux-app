@@ -31,9 +31,8 @@ export const Create = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    debugger;
    const newUSerID =users[users.length - 1].id + 1
-const user = {
+   const user = {
   id:id ?? newUSerID,
   title: formData.title,
   completed:formData.completed,
@@ -51,7 +50,6 @@ if(id===null || id===undefined){
   };
 
   const handleInputChange = (e) => {
-    debugger
     const {
       target: { name, value },
     } = e;
