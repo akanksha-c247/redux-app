@@ -43,7 +43,8 @@ export const SignIn = () => {
           addSignReducer({
             email: formData.email,
             customId:LoggedIN.customId,
-            firstName:formData.firstName
+            firstName:LoggedIN.firstName,
+            lastName:LoggedIN.lastName
           })
         );
           console.log("Login successful");

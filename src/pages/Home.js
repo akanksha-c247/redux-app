@@ -27,7 +27,8 @@ const Home = () => {
   const { currentUser, setCurrentUser } = useUserContext();
   const todosPerPage = useSelector((state) => state.USERS.todosPerPage);
   const currentPage = useSelector((state) => state.USERS.currentPage);
-  const users = useSelector((state) => state?.USERS?.userList);
+  const users = useSelector((state) => state?.USERS?.loggedInUser);
+  console.log('users: ', users);
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
@@ -72,11 +73,11 @@ const Home = () => {
       <Paper elevation={3} style={{ padding: "16px" }}>
         <Grid item xs={12} md={3}>
           <Paper elevation={3} style={{ padding: "20px"}}>
-            <Button variant="outlined" color="primary" onClick={handleLogout} style={{marginRight:"950px",marginBottom:"-50px"}}>
+            <Button variant="outlined" color="primary" onClick={handleLogout} style={{marginRight:"950px",marginBottom:"-115px"}}>
               Logout
             </Button>
-            <Typography variant="subtitle1" gutterBottom>
-              Welcome, {currentUser?.firstName} 
+            <Typography variant="subtitle1" gutterBottom >
+              Welcome, {users[0]?.firstName} 
             </Typography>
             <MuiLink
               component={Link}
