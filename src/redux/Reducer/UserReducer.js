@@ -8,7 +8,7 @@ const userSlice = createSlice({
     userList: [],
     todos: [],
     originalTodos:[],
-    todosPerPage: 11,
+    todosPerPage: 20,
     currentPage: 1,
     loading:false,
     loggedInUser:[],

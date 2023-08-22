@@ -10,22 +10,21 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useDispatch, useSelector } from "react-redux";
+import { createTheme } from "@mui/material/styles";
 import { Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { addSignReducer } from "../../redux/Reducer/UserReducer";
+import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks";
 
-const defaultTheme = createTheme();
 
 export const SignIn = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const despatch = useDispatch();
+  const despatch = useAppDispatch();
   const navigate = useNavigate()
-  const users = useSelector((state) => state?.USERS?.userList);
+  const users = useAppSelector((state) => state?.USERS?.userList);
 
   const handleInputChange = ({ target: { name, value } }) => {
     setFormData((prevData) => ({
@@ -59,7 +58,6 @@ export const SignIn = () => {
   
   return (
     <div>
-      <ThemeProvider theme={defaultTheme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Grid
@@ -173,7 +171,6 @@ export const SignIn = () => {
             </Box>
           </Box>
         </Container>
-      </ThemeProvider>
     </div>
   );
 };

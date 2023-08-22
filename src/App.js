@@ -6,13 +6,16 @@ import { SignIn } from './pages/authentication/SignIn';
 import { SignUp } from './pages/authentication/SignUp';
 
 function App() {
+
   return (
     <div className="App">
+      learn react
       <BrowserRouter>
       <Routes>
         <Route path='/Home' element={<Home/>}/>
         <Route path='/create/:id?' element={<Create/>}/>
         <Route path='/signup' element={<SignUp/>}/>
+        <Route path='/' element={<SignIn/>}/>
         <Route path='/' element={<SignIn/>}/>
       </Routes>
       </BrowserRouter>

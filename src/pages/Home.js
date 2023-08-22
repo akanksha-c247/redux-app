@@ -6,7 +6,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { useDispatch, useSelector } from "react-redux";
 import { Button, Grid, Link as MuiLink, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,28 +19,31 @@ import {
 } from "../redux/Reducer/UserReducer";
 import { fetchPaginationData } from "../redux/paginationThunk";
 import SearchAppBar from "../components/SearchBar";
-import { useUserContext } from "../contextAPI/ReduxContext";
+import { useAppDispatch, useAppNavigate, useAppSelector } from "../redux/reduxHooks";
 
 const Home = () => {
-  const todos = useSelector((state) => state?.USERS?.todos);
-  const { currentUser, setCurrentUser } = useUserContext();
-  const todosPerPage = useSelector((state) => state.USERS.todosPerPage);
-  const currentPage = useSelector((state) => state.USERS.currentPage);
-  const users = useSelector((state) => state?.USERS?.loggedInUser);
-  console.log('users: ', users);
-  const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const todos = useAppSelector((state) => state?.USERS?.todos);
+  console.log('todos: ', todos);
+  const todosPerPage = useAppSelector((state) => state?.USERS?.todosPerPage);
+  console.log('todosPerPage: ', todosPerPage);
+  const currentPage = useAppSelector((state) => state?.USERS?.currentPage);
+  const users = useAppSelector((state) => state?.USERS?.loggedInUser);
+  const dispatch = useAppDispatch();
+  const navigate = useAppNavigate()
 
   useEffect(() => {
     dispatch(fetchPaginationData());
-    setCurrentUser()
-  }, [dispatch,setCurrentUser]);
+  }, [dispatch]);
 
-  const total_page = Math.ceil(todos.length / todosPerPage);
-  const pages = [...Array(total_page + 1).keys()].slice(1);
+  const total_page = Math?.ceil(todos?.length / todosPerPage);
+  // const pages = [...Array(total_page + 1).keys()].slice(1);
+  const pages = [];
+for (let i = 1; i <= total_page; i++) {
+  pages.push(i);
+}
   const indexOfLastPage = currentPage * todosPerPage;
   const indexOfFirstPage = indexOfLastPage - todosPerPage;
-  const visibleTodos = todos.slice(indexOfFirstPage, indexOfLastPage);
+  const visibleTodos = todos?.slice(indexOfFirstPage, indexOfLastPage);
 
   const navigatePrev = () => {
     if (currentPage !== null) {
@@ -67,6 +69,9 @@ const Home = () => {
     dispatch(logOutReducer());
     navigate("/");
   };
+  const firstName = users?.length > 0 ? users[0]?.firstName : null;
+  console.log('firstName: ', firstName);
+
   return (
     <div>
       <SearchAppBar />
@@ -77,7 +82,7 @@ const Home = () => {
               Logout
             </Button>
             <Typography variant="subtitle1" gutterBottom >
-              Welcome, {users[0]?.firstName} 
+              Welcome, {firstName} 
             </Typography>
             <MuiLink
               component={Link}
@@ -127,7 +132,7 @@ const Home = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {visibleTodos.map((row) => (
+              {visibleTodos?.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell>{row.id}</TableCell>
                   <TableCell>{row.title}</TableCell>

@@ -1,4 +1,4 @@
-import {useState, useRef} from 'react';
+import { useRef} from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -9,7 +9,7 @@ import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import {filterUsers} from '../redux/Reducer/UserReducer'
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch } from '../redux/reduxHooks';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -53,9 +53,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar() {
-  const todos = useSelector((state) => state?.USERS?.todos);
   const inputRef=useRef('');
-  const dispatch=useDispatch();
+  const dispatch=useAppDispatch()
 
   const filterUser = () => {
     const inputValue = inputRef.current.value;
@@ -63,7 +62,7 @@ export default function SearchAppBar() {
 }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1 }} data-testid="todos">
       <AppBar position="static">
         <Toolbar>
           <IconButton

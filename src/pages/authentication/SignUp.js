@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,12 +11,9 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useDispatch } from "react-redux";
 import { addSignupReducer } from "../../redux/Reducer/UserReducer";
-import { Navigate, useNavigate } from "react-router-dom";
-
-const defaultTheme = createTheme();
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../redux/reduxHooks";
 
 export const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -25,8 +22,9 @@ export const SignUp = () => {
     email: "",
     password: "",
   });
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const handleInputChange = ({ target: { name, value } }) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -57,7 +55,6 @@ export const SignUp = () => {
   
   return (
     <div>
-      <ThemeProvider theme={defaultTheme}>
         {/* <ToastContainer /> */}
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -180,7 +177,6 @@ export const SignUp = () => {
             </Box>
           </Box>
         </Container>
-      </ThemeProvider>
     </div>
   );
 };
