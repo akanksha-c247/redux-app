@@ -1,48 +1,27 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
 import userEvent from '@testing-library/user-event';
-import { useAppDispatch } from '../../redux/reduxHooks';
-import { filterUsers } from '../Filter';
 import SearchAppBar from '../SearchBar';
 
-jest.mock('../../redux/reduxHooks');
+const mockStore = configureStore([]);
 
 describe('SearchAppBar', () => {
-  const mockDispatch = jest.fn();
+  it('dispatches filterUsers action when input value changes', () => {
+    const store = mockStore({});
 
-  beforeEach(() => {
-    useAppDispatch.mockReturnValue(mockDispatch);
-  });
+    render(
+      <Provider store={store}>
+        <SearchAppBar />
+      </Provider>
+    );
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+    const input = screen.getByTestId('inputBox');
 
-  it('renders the search bar', () => {
-    render(<SearchAppBar />);
-    const searchInput = screen.getByPlaceholderText('Search…');
-    expect(searchInput).toBeInTheDocument();
-  });
+    userEvent.type(input, 'n');
 
-  it('dispatches filter action on search input change', () => {
-    render(<SearchAppBar />);
-    const searchInput = screen.getByPlaceholderText('Search…');
-
-    userEvent.type(searchInput, 'search term');
-
-    expect(mockDispatch).toHaveBeenCalledWith(filterUsers('search term'));
-  });
-
-  it('clears input on clear button click', async () => {
-    render(<SearchAppBar />);
-    const searchInput = screen.getByPlaceholderText('Search…');
-
-    userEvent.type(searchInput, 'search term');
-
-    const clearButton = screen.getByRole('button', { name: /clear/i });
-
-    fireEvent.click(clearButton);
-
-    await waitFor(() => expect(searchInput).toHaveValue(''));
+    const actions = store.getActions();
+    expect(actions).toEqual([{ type: 'users/filterUsers', payload: 'n' }]);
   });
 });

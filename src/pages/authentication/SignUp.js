@@ -12,8 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { addSignupReducer } from "../../redux/Reducer/UserReducer";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../redux/reduxHooks";
+import { useAppDispatch, useAppNavigate } from "../../redux/reduxHooks";
 
 export const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +22,7 @@ export const SignUp = () => {
     password: "",
   });
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const navigate = useAppNavigate();
 
   const handleInputChange = ({ target: { name, value } }) => {
     setFormData((prevData) => ({
@@ -44,11 +43,11 @@ export const SignUp = () => {
 
     };
 
-    const storedData = localStorage.getItem('storeLoginDetails');
-    const existingData = storedData ? JSON.parse(storedData) : {};
+    // const storedData = localStorage.getItem('storeLoginDetails');
+    // const existingData = storedData ? JSON.parse(storedData) : {};
 
-    const updatedData = { ...existingData, ...userData };
-    localStorage.setItem('storeLoginDetails', JSON.stringify(updatedData));
+    // const updatedData = { ...existingData, ...userData };
+    // localStorage.setItem('storeLoginDetails', JSON.stringify(updatedData));
     dispatch(addSignupReducer(userData));
     navigate('/')
   };
@@ -77,6 +76,7 @@ export const SignUp = () => {
               noValidate
               onSubmit={handleSubmit}
               sx={{ mt: 3 }}
+              data-testId="handleSubmit"
             >
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -88,8 +88,9 @@ export const SignUp = () => {
                     id="firstName"
                     label="First Name"
                     autoFocus
-                    value={formData.firstName}
+                    value={formData?.firstName}
                     onChange={handleInputChange}
+                    data-testId="firstNameTest"
                     // error={errors.firstName}
                   />
                   {/* {errors.firstName && (
@@ -106,8 +107,10 @@ export const SignUp = () => {
                     label="Last Name"
                     name="lastName"
                     autoComplete="family-name"
-                    value={formData.lastName}
+                    value={formData?.lastName}
                     onChange={handleInputChange}
+                    data-testId="LastName"
+
                   />
                   {/* {errors.lastName && (
                 <Typography variant="caption" color="error">
@@ -125,6 +128,7 @@ export const SignUp = () => {
                     autoComplete="email"
                     onChange={handleInputChange}
                     value={formData.email}
+                    data-testId="email"
                   />
                   {/* {errors.email && (
                 <Typography variant="caption" color="error">
@@ -143,6 +147,7 @@ export const SignUp = () => {
                     autoComplete="new-password"
                     value={formData.password}
                     onChange={handleInputChange}
+                    data-testId="password"
                   />
                   {/* {errors.password && (
                 <Typography variant="caption" color="error">

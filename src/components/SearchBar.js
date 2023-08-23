@@ -90,6 +90,7 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
               onChange={filterUser}
               inputRef ={inputRef}
+              data-testId="inputBox"
             />
           </Search>
         </Toolbar>
