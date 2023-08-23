@@ -12,49 +12,49 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { addSignupReducer } from "../../redux/Reducer/UserReducer";
-import { useAppDispatch, useAppNavigate } from "../../redux/reduxHooks";
+import { useAppDispatch } from "../../redux/reduxHooks";
+import { SignUpFormData, Todo, User } from "../../utils/types";
+import { useNavigate } from "react-router-dom";
 
-export const SignUp = () => {
-  const [formData, setFormData] = useState({
+export const SignUp: React.FC = () => {
+  const [formData, setFormData] = useState<SignUpFormData>({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
   });
   const dispatch = useAppDispatch();
-  const navigate = useAppNavigate();
+  const navigate = useNavigate();
 
-  const handleInputChange = ({ target: { name, value } }) => {
+  const handleInputChange = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
-
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const userData = {
-      customId:1,
+    const userDataSet:Todo = {
+      customId: 1,
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
       password: formData.password,
-
+      id: 0,
+      userId: 0,
+      title: "",
+      completed: false,
+      data: [],
+      error: ""
     };
 
-    // const storedData = localStorage.getItem('storeLoginDetails');
-    // const existingData = storedData ? JSON.parse(storedData) : {};
-
-    // const updatedData = { ...existingData, ...userData };
-    // localStorage.setItem('storeLoginDetails', JSON.stringify(updatedData));
-    dispatch(addSignupReducer(userData));
-    navigate('/')
+    dispatch(addSignupReducer(userDataSet));
+    navigate('/');
   };
-  
+
   return (
     <div>
-        {/* <ToastContainer /> */}
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
@@ -90,14 +90,7 @@ export const SignUp = () => {
                     autoFocus
                     value={formData?.firstName}
                     onChange={handleInputChange}
-                    data-testId="firstNameTest"
-                    // error={errors.firstName}
-                  />
-                  {/* {errors.firstName && (
-                <Typography variant="caption" color="error">
-                  Please enter your first name.
-                </Typography>
-              )} */}
+                    data-testId="firstNameTest"/>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -112,11 +105,6 @@ export const SignUp = () => {
                     data-testId="LastName"
 
                   />
-                  {/* {errors.lastName && (
-                <Typography variant="caption" color="error">
-                  Please enter your last name.
-                </Typography>
-              )} */}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -130,11 +118,6 @@ export const SignUp = () => {
                     value={formData.email}
                     data-testId="email"
                   />
-                  {/* {errors.email && (
-                <Typography variant="caption" color="error">
-                  Please enter your Email.
-                </Typography>
-              )} */}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -149,11 +132,6 @@ export const SignUp = () => {
                     onChange={handleInputChange}
                     data-testId="password"
                   />
-                  {/* {errors.password && (
-                <Typography variant="caption" color="error">
-                  Please enter your Password.
-                </Typography>
-              )} */}
                 </Grid>
                 <Grid item xs={12}>
                   <FormControlLabel

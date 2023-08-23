@@ -3,13 +3,31 @@ import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
+import InputBase from '@mui/material/InputBase'; 
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import {filterUsers} from '../redux/Reducer/UserReducer'
+import { SearchAppBarProps } from '../utils/types';
+import React from 'react';
 import { useAppDispatch } from '../redux/reduxHooks';
+import { filterUsers } from '../redux/Reducer/UserReducer';
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '12ch',
+      '&:focus': {
+        width: '20ch',
+      },
+    },
+  },
+}));
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -36,30 +54,16 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
-  },
-}));
-
-export default function SearchAppBar() {
-  const inputRef=useRef('');
-  const dispatch=useAppDispatch()
+const SearchAppBar: React.FC<SearchAppBarProps> = () => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const dispatch = useAppDispatch();
 
   const filterUser = () => {
-    const inputValue = inputRef.current.value;
-    dispatch(filterUsers(inputValue)); 
-}
+    const inputValue = inputRef.current?.value;
+    if (inputValue) {
+      dispatch(filterUsers(inputValue));
+    }
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }} data-testid="todos">
@@ -89,7 +93,7 @@ export default function SearchAppBar() {
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
               onChange={filterUser}
-              inputRef ={inputRef}
+              inputRef={inputRef}
               data-testId="inputBox"
             />
           </Search>
@@ -97,4 +101,6 @@ export default function SearchAppBar() {
       </AppBar>
     </Box>
   );
-}
+};
+
+export default SearchAppBar;

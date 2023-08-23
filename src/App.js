@@ -1,3 +1,4 @@
+import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
@@ -8,8 +9,7 @@ import { SignUp } from './pages/authentication/SignUp';
 function App() {
 
   return (
-    <div className="App">
-      learn react
+    <>    <div className="App">
       <BrowserRouter>
       <Routes>
         <Route path='/Home' element={<Home/>}/>
@@ -20,6 +20,7 @@ function App() {
       </Routes>
       </BrowserRouter>
     </div>
+    </>
   );
 }
 

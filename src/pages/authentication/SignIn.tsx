@@ -10,44 +10,50 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { createTheme } from "@mui/material/styles";
 import { Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import {RootState, SignInFormData,Todo } from "../../utils/types";
 import { addSignReducer } from "../../redux/Reducer/UserReducer";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks";
 
-
-export const SignIn = () => {
-  const [formData, setFormData] = useState({
+export const SignIn: React.FC = () => {
+  const [formData, setFormData] = useState<SignInFormData>({
     email: "",
     password: "",
   });
-  const despatch = useAppDispatch();
-  const navigate = useNavigate()
-  const users = useAppSelector((state) => state?.USERS?.userList);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const users = useAppSelector((state: RootState) => state?.USERS?.userList);
 
-  const handleInputChange = ({ target: { name, value } }) => {
+  const handleInputChange = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (users) {
-      const LoggedIN =  users.find((user)=>user.email===formData.email && user.password===formData.password);
+      const LoggedIN = users.find(
+        (user: Todo) => user.email === formData.email && user.password === formData.password
+        );      
       if (LoggedIN) {
-        despatch(
+        dispatch(
           addSignReducer({
             email: formData.email,
-            customId:LoggedIN.customId,
-            firstName:LoggedIN.firstName,
-            lastName:LoggedIN.lastName
+            customId: LoggedIN.customId,
+            firstName: LoggedIN.firstName,
+            lastName: LoggedIN.lastName,
+            id: 0,
+            password: "",
+            userId: 0,
+            title: "",
+            completed: false
           })
         );
-          console.log("Login successful");
-          navigate('/home')
+        console.log("Login successful");
+        navigate("/home");
       } else {
         console.log("Login failed");
       }
@@ -118,11 +124,6 @@ export const SignIn = () => {
                 onChange={handleInputChange}
                 value={formData.email}
               />
-              {/* {error.email && (
-                <div className="error" style={{ color: "red" }}>
-                  {error.email}
-                </div>
-              )} */}
               <TextField
                 margin="normal"
                 required
@@ -135,11 +136,6 @@ export const SignIn = () => {
                 value={formData.password}
                 onChange={handleInputChange}
               />
-              {/* {error.password && (
-                <div className="error" style={{ color: "red" }}>
-                  {error.password}
-                </div>
-              )} */}
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
@@ -157,7 +153,6 @@ export const SignIn = () => {
                   <Link
                     href="/forget-Password"
                     variant="body2"
-                    // onClick={handleForgotPassword}
                   >
                     Forgot password?
                   </Link>

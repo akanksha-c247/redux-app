@@ -11,36 +11,37 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useNavigate } from "react-router-dom";
 import {
   deleteUser,
-  onNaviGateOnNext,
   onNavigatePrev,
   onChangePrevPerPage,
   onClickCurrentPage,
   logOutReducer,
+  onNaviGateOnNext,
 } from "../redux/Reducer/UserReducer";
-import { fetchPaginationData } from "../redux/paginationThunk";
 import SearchAppBar from "../components/SearchBar";
-import { useAppDispatch, useAppNavigate, useAppSelector } from "../redux/reduxHooks";
+import { Todo } from "../utils/types";
+import { useAppDispatch, useAppSelector } from "../redux/reduxHooks";
+import { fetchPaginationData } from "../redux/paginationThunk";
 
-const Home = () => {
+const Home: React.FC = () => {
   const todos = useAppSelector((state) => state?.USERS?.todos);
-  console.log('todos: ', todos);
   const todosPerPage = useAppSelector((state) => state?.USERS?.todosPerPage);
-  console.log('todosPerPage: ', todosPerPage);
   const currentPage = useAppSelector((state) => state?.USERS?.currentPage);
   const users = useAppSelector((state) => state?.USERS?.loggedInUser);
   const dispatch = useAppDispatch();
-  const navigate = useAppNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchPaginationData());
+    // eslint-disable-next-line no-debugger
+    debugger
+    dispatch(fetchPaginationData())
   }, [dispatch]);
 
   const total_page = Math?.ceil(todos?.length / todosPerPage);
-  // const pages = [...Array(total_page + 1).keys()].slice(1);
   const pages = [];
-for (let i = 1; i <= total_page; i++) {
-  pages.push(i);
-}
+  for (let i = 1; i <= total_page; i++) {
+    pages.push(i);
+  }
+
   const indexOfLastPage = currentPage * todosPerPage;
   const indexOfFirstPage = indexOfLastPage - todosPerPage;
   const visibleTodos = todos?.slice(indexOfFirstPage, indexOfLastPage);
@@ -57,37 +58,46 @@ for (let i = 1; i <= total_page; i++) {
     }
   };
 
-  const handleCurrentPage = (_p) => {
+  const handleCurrentPage = (_p: number) => {
     dispatch(onClickCurrentPage(_p));
   };
 
-  const handleDelete = (id) => {
-    dispatch(deleteUser({ id: parseInt(id) }));
+  const handleDelete = (id: number) => {
+    dispatch(deleteUser({ id }));
   };
 
   const handleLogout = () => {
     dispatch(logOutReducer());
     navigate("/");
   };
+
   const firstName = users?.length > 0 ? users[0]?.firstName : null;
-  console.log('firstName: ', firstName);
 
   return (
     <div>
       <SearchAppBar />
       <Paper elevation={3} style={{ padding: "16px" }}>
         <Grid item xs={12} md={3}>
-          <Paper elevation={3} style={{ padding: "20px"}}>
-            <Button variant="outlined" color="primary" onClick={handleLogout} style={{marginRight:"950px",marginBottom:"-115px"}}>
+          <Paper elevation={3} style={{ padding: "20px" }}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleLogout}
+              style={{ marginRight: "950px", marginBottom: "-115px" }}
+            >
               Logout
             </Button>
-            <Typography variant="subtitle1" gutterBottom >
-              Welcome, {firstName} 
+            <Typography variant="subtitle1" gutterBottom>
+              Welcome, {firstName}
             </Typography>
             <MuiLink
               component={Link}
               to="/create"
-              style={{ marginBottom: "16px", display: "block", color: "#fff" }}
+              style={{
+                marginBottom: "16px",
+                display: "block",
+                color: "#fff",
+              }}
             >
               <Button
                 variant="contained"
@@ -106,7 +116,7 @@ for (let i = 1; i <= total_page; i++) {
             {pages.map((_p) => (
               <span
                 key={_p}
-                onClick={() => handleCurrentPage.call(null, _p)}
+                onClick={() => handleCurrentPage(_p)}
                 style={{
                   marginLeft: "4px",
                   marginRight: "4px",
@@ -132,19 +142,19 @@ for (let i = 1; i <= total_page; i++) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {visibleTodos?.map((row) => (
+              {visibleTodos?.map((row: Todo) => (
                 <TableRow key={row.id}>
                   <TableCell>{row.id}</TableCell>
                   <TableCell>{row.title}</TableCell>
                   <TableCell>{row.completed ? "Yes" : "No"}</TableCell>
                   <TableCell>
-                    <MuiLink
+                    <Button
                       component={Link}
                       to={`/create/${row.id}`}
                       variant="contained"
                     >
                       Edit
-                    </MuiLink>
+                    </Button>
                     <Button
                       variant="outlined"
                       startIcon={<DeleteIcon />}
@@ -164,7 +174,7 @@ for (let i = 1; i <= total_page; i++) {
         </footer>
         <select
           onChange={(event) =>
-            dispatch(onChangePrevPerPage(event.target.value))
+            dispatch(onChangePrevPerPage(+event.target.value))
           }
           style={{ marginTop: "16px" }}
         >
