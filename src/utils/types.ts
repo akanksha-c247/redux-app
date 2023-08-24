@@ -5,7 +5,6 @@ export interface InputProps {
   onChange: (newValue: string) => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface SearchAppBarProps {}
 
 export interface SignInFormData {
@@ -64,12 +63,12 @@ export interface UserState {
   isAuthenticated: boolean;
 }
 
-export type InputType = "email" | "password";
+export type InputType = 'email' | 'password';
 
 export type ValidationMessage =
-  | ""
-  | "Invalid email address"
-  | "Password is too short";
+  | ''
+  | 'Invalid email address'
+  | 'Password is too short';
 
 export interface RootState {
   USERS: UserState;

@@ -1,9 +1,10 @@
-import { Button, FormControl, FormControlLabel, Radio, RadioGroup, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { addUser, updateUser } from "../redux/Reducer/UserReducer";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import { RootState, Todo, User } from "../utils/types";
+import { Button, FormControl, FormControlLabel, Radio, RadioGroup, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { addUser, updateUser } from '../redux/Reducer/UserReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { RootState, Todo, User } from '../utils/types';
+import { ADD_NEW_USER, HOME_PAGE, SUBMIT } from '../utils/constant';
 
 export const Create: React.FC = () => {
   const [formData, setFormData] = useState<User>({
@@ -15,7 +16,7 @@ export const Create: React.FC = () => {
     firstName: '',
     lastName: '',
     email: '',
-    password: ''
+    password: '',
   });
   
   const { id } = useParams<{ id: string | undefined }>();
@@ -41,30 +42,29 @@ export const Create: React.FC = () => {
   }, [id, users]);
 
   const onSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
-  const newUserId = users[users.length - 1].id + 1;
-  const user: Todo = {
-    id: id ? +id : newUserId,
-    title: formData.title,
-    completed: formData.completed,
-    userId: loggedInUser && loggedInUser[0] && loggedInUser[0].customId
-      ? loggedInUser[0].customId
-      : newUserId,
-    data: [],
-    password: "",
-    email: "",
-    lastName: "",
-    firstName: "",
-    customId: 0,
-    error: ""
+    e.preventDefault();
+    const newUserId = users[users.length - 1].id + 1;
+    const user: Todo = {id: id ? +id : newUserId,
+      title: formData.title,
+      completed: formData.completed,
+      userId: loggedInUser && loggedInUser[0] && loggedInUser[0].customId
+        ? loggedInUser[0].customId
+        : newUserId,
+      data: [],
+      password: '',
+      email: '',
+      lastName: '',
+      firstName: '',
+      customId: 0,
+      error: '',
+    };
+    if (id === null || id === undefined) {
+      dispatch(addUser(user));
+    } else {
+      dispatch(updateUser(user));
+    }
+    navigate(HOME_PAGE);
   };
-  if (id === null || id === undefined) {
-    dispatch(addUser(user));
-  } else {
-    dispatch(updateUser(user));
-  }
-  navigate("/home");
-};
 
   
 
@@ -78,7 +78,7 @@ export const Create: React.FC = () => {
 
   return (
     <div>
-      <Typography variant="h3">Add New User</Typography>
+      <Typography variant="h3">{ADD_NEW_USER}</Typography>
       <form onSubmit={onSubmit}>
         <FormControl>
           <RadioGroup
@@ -101,7 +101,7 @@ export const Create: React.FC = () => {
           />
         </FormControl>
         <FormControl>
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{SUBMIT}</Button>
         </FormControl>
       </form>
     </div>

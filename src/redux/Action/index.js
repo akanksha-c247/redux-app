@@ -1,14 +1,14 @@
-import { DECREMENT, INCREMENT, SET_USERS } from "../../utils/constant";
+import { DECREMENT, INCREMENT, SET_USERS } from '../../utils/constant';
 export const increment = () => ({
-    type: INCREMENT,
-  });
+  type: INCREMENT,
+});
   
-  export const decrement = () => ({
-    type: DECREMENT,
-  });
+export const decrement = () => ({
+  type: DECREMENT,
+});
   
-  export const setUsers = (users) => ({
-    type: SET_USERS,
-    payload: users,
-  });
+export const setUsers = (users) => ({
+  type: SET_USERS,
+  payload: users,
+});
   

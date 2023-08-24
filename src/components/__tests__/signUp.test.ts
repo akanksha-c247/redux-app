@@ -38,7 +38,7 @@ describe("Main Component", () => {
 
     // Wait for the product to appear
     await waitFor(() => {
-      const productTitleElement = screen.queryByText(mockProducts[0].title);
+      const productTitleElement = screen.queryByText(mockProducts[0]);
       expect(productTitleElement).toBeInTheDocument();
     });
   });

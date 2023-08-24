@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Todo, User, Users, UserState } from "../../utils/types";
-import { ActionTypes } from "../../utils/constant";
-import { fetchPaginationData } from "../paginationThunk";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Todo, User, UserState } from '../../utils/types';
+import { ActionTypes } from '../../utils/constant';
+import { fetchTodosThunk } from '../services/todosThunk';
 
 const initialState: UserState = {
   userList: [],
@@ -72,15 +72,15 @@ const userSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPaginationData.pending, (state) => {
+      .addCase(fetchTodosThunk.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchPaginationData.fulfilled, (state, action) => {
+      .addCase(fetchTodosThunk.fulfilled, (state, action) => {
         state.loading = false;
         if (state.todos.length === 0) state.todos = action.payload;
         state.originalTodos = action.payload;
       })
-      .addCase(fetchPaginationData.rejected, (state) => {
+      .addCase(fetchTodosThunk.rejected, (state) => {
         state.loading = false;
       });
   },
