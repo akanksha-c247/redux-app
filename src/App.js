@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{Suspense} from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
@@ -9,18 +9,19 @@ import { SignUp } from './pages/authentication/SignUp';
 function App() {
 
   return (
-    <>    <div className="App">
-      <BrowserRouter>
-      <Routes>
-        <Route path='/Home' element={<Home/>}/>
-        <Route path='/create/:id?' element={<Create/>}/>
-        <Route path='/signup' element={<SignUp/>}/>
-        <Route path='/' element={<SignIn/>}/>
-        <Route path='/' element={<SignIn/>}/>
-      </Routes>
-      </BrowserRouter>
+    <div className="App">
+      <Suspense fallback={null}>
+        <BrowserRouter>
+          <Routes>
+            <Route path='/Home' element={<Home/>}/>
+            <Route path='/create/:id?' element={<Create/>}/>
+            <Route path='/signup' element={<SignUp/>}/>
+            <Route path='/' element={<SignIn/>}/>
+            <Route path='/' element={<SignIn/>}/>
+          </Routes>
+        </BrowserRouter>
+      </Suspense>
     </div>
-    </>
   );
 }
 

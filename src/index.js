@@ -6,6 +6,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import App from './App';
 import store from './redux/Store';
+import './pages/i18';
 
 const defaultTheme = createTheme(); 
 // eslint-disable-next-line no-undef

@@ -30,23 +30,17 @@ export const ACTION = 'Action';
 export const  PAGE = 'Page';
 export const  OF = 'Of';
 
-
 //BUTTON NAME
 export const ADD_NEW_USER = 'Add New User';
 export const  SUBMIT = 'Submit';
-export const  LOGOUT = 'Logout';
-export const  CREATE = 'Button';
+// export const  LOGOUT = 'Logout';
+export const  CREATE = 'Create';
 export const  PREV = 'Prev';
 export const  NEXT = 'Next';
 export const  EDIT = 'Edit';
 export const  DELETE = 'Delete';
 
-
 //number text
 export const  PAGE_10 = '10';
 export const  PAGE_50 = '50';
 export const  PAGE_100 = '100';
-
-
-
-

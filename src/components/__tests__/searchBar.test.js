@@ -18,7 +18,7 @@ describe('SearchAppBar', () => {
     );
 
     const input = screen.getByTestId('inputBox');
-
+    
     userEvent.type(input, 'n');
 
     const actions = store.getActions();

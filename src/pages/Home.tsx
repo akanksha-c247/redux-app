@@ -6,7 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { Button, Grid, Link as MuiLink, Typography } from '@mui/material';
+import { Button, Grid} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -17,10 +17,12 @@ import {
   logOutReducer,
   onNaviGateOnNext,
 } from '../redux/Reducer/UserReducer';
-import SearchAppBar from '../components/SearchBar';
 import { useAppDispatch, useAppSelector } from '../redux/reduxHooks';
 import { fetchTodosThunk } from '../redux/services/todosThunk';
-import { ACTION, COMPLETED, CREATE, DELETE, EDIT, GET_FETCH_URL, ID, LOGOUT, NEXT, OF, PAGE, PREV, TITLE, WELCOME } from '../utils/constant';
+import { ACTION, COMPLETED, DELETE, EDIT, GET_FETCH_URL, ID, NEXT, OF, PAGE, PREV, TITLE } from '../utils/constant';
+import Header from '../components/header/Header';
+import { useTranslation } from 'react-i18next';
+
 
 const Home: React.FC = () => {
   const todos = useAppSelector((state) => state?.USERS?.todos);
@@ -29,17 +31,17 @@ const Home: React.FC = () => {
   const users = useAppSelector((state) => state?.USERS?.loggedInUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const {t} = useTranslation(['home']);
 
   useEffect(() => {
     dispatch(fetchTodosThunk(GET_FETCH_URL));
   }, [dispatch]);
 
-  const total_page = Math?.ceil(todos?.length / todosPerPage);
-  const pages = [];
-  for (let i = 1; i <= total_page; i++) {
-    pages.push(i);
-  }
+  // Calculate total number of pages and create an array of page numbers
+  const total_page = Math?.ceil((todos?.length || 0) / todosPerPage);
+  const pages = Array.from({ length: total_page }, (_, index) => index + 1);
 
+  // Calculate the range of visible todos based on current page
   const indexOfLastPage = currentPage * todosPerPage;
   const indexOfFirstPage = indexOfLastPage - todosPerPage;
   const visibleTodos = todos?.slice(indexOfFirstPage, indexOfLastPage);
@@ -69,42 +71,12 @@ const Home: React.FC = () => {
     navigate('/');
   };
 
-  const firstName = users?.length > 0 ? users[0]?.firstName : null;
-
   return (
     <div>
-      <SearchAppBar />
+      <Header onLogout={handleLogout}/>
+      <h1>{t('home:Home')}</h1>
       <Paper elevation={3} style={{ padding: '16px' }}>
         <Grid item xs={12} md={3}>
-          <Paper elevation={3} style={{ padding: '20px' }}>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleLogout}
-              style={{ marginRight: '950px', marginBottom: '-115px' }}
-            >
-              {LOGOUT}
-            </Button>
-            <Typography variant="subtitle1" gutterBottom>
-              {WELCOME}, {firstName}
-            </Typography>
-            <MuiLink
-              component={Link}
-              to="/create"
-              style={{
-                marginBottom: '16px',
-                display: 'block',
-                color: '#fff',
-              }}
-            >
-              <Button
-                variant="contained"
-                style={{ backgroundColor: '#4caf50' }}
-              >
-                {CREATE}+
-              </Button>
-            </MuiLink>
-          </Paper>
         </Grid>
         <div>
           <span onClick={navigatePrev} style={{ cursor: 'pointer' }}>

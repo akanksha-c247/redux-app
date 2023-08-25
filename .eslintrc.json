@@ -5,7 +5,7 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended"  
   ],
   "settings": {
     "react": {
@@ -23,5 +23,7 @@
   "env": {
     "jest/globals": true
   }
-  
+  // "compilerOptions": {
+  //   "types": ["i18next"]
+  // }
 }
