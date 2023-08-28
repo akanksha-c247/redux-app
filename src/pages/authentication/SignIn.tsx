@@ -19,7 +19,7 @@ import { ERROR_LOGIN, FORGET_PASSWORD, HAVE_AN_ACCOUNT, HOME_PAGE, SIGN_IN, SIGN
 import { Label } from '@mui/icons-material';
 
 export const SignIn: React.FC = () => {
-  const [error,setError]=useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<Partial<SignInFormData>>({}); // State to store validation errors
   const [formData, setFormData] = useState<SignInFormData>({
     email: '',
     password: '',
@@ -27,41 +27,53 @@ export const SignIn: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const users = useAppSelector((state) => state?.USERS?.userList);
-
+  console.log('users',useAppSelector((state) => state?.USERS));
   const handleInputChange = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
-    setError(null);
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
+  const validateForm = () => {
+    const errors: Partial<SignInFormData> = {};
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+    if (!formData.email) {
+      errors.email = 'Email is required.';
+    } else if (!emailRegex.test(formData.email)) {
+      errors.email = 'Invalid email format.';
+    }
+  
+    if (!formData.password) {
+      errors.password = 'Password is required.';
+    } else if (!passwordRegex.test(formData.password)) {
+      errors.password = 'Password must be at least 8 characters and contain a letter and a number.';
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    setError(null);
     e.preventDefault();
-    if (users) {
-      const loggedIn = users.find(
-        (user) => user.email === formData.email && user.password === formData.password);      
-      if (loggedIn) {
-        dispatch(
-          addSignReducer({
-            email: formData.email,
-            customId: loggedIn.customId,
-            firstName: loggedIn.firstName,
-            lastName: loggedIn.lastName,
-            id: 0,
-            password: '',
-            userId: 0,
-            title: '',
-            completed: false,
-          })
-        );
-        navigate(HOME_PAGE);
-      } else {
-        setError(ERROR_LOGIN);
-      }
-    }
-  };
+    if (validateForm()) {
+      if (users) {
+        const loggedIn = users.find(
+          (user) => user.email === formData.email && user.password === formData.password);      
+        if (loggedIn) {
+          dispatch(
+            addSignReducer({
+              email: formData.email,
+              password: formData.password,
+            })
+          );
+          navigate(HOME_PAGE);
+        }    }
+    }};
   
   return (
     <div>
@@ -112,6 +124,7 @@ export const SignIn: React.FC = () => {
             onSubmit={handleSubmit}
             noValidate
             sx={{ mt: 1 }}
+            data-testid="handleSubmit"
           >
             <TextField
               margin="normal"
@@ -124,6 +137,9 @@ export const SignIn: React.FC = () => {
               autoFocus
               onChange={handleInputChange}
               value={formData.email}
+              helperText={formErrors.email} // Display validation error message
+              error={!!formErrors.email} // Apply error style
+
             />
             <TextField
               margin="normal"
@@ -136,6 +152,9 @@ export const SignIn: React.FC = () => {
               autoComplete="current-password"
               value={formData.password}
               onChange={handleInputChange}
+              helperText={formErrors.password} // Display validation error message
+              error={!!formErrors.password} // Apply error style
+
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -149,7 +168,6 @@ export const SignIn: React.FC = () => {
             >
               {SIGN_IN}
             </Button>
-            {error?<Label>{ERROR_LOGIN}</Label>:null}  
             <Grid container>
               <Grid item xs>
                 <Link

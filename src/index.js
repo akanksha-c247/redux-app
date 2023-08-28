@@ -6,19 +6,19 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import App from './App';
 import store from './redux/Store';
-import './pages/i18';
+import './i18next';
 
 const defaultTheme = createTheme(); 
 // eslint-disable-next-line no-undef
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={defaultTheme}>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </ThemeProvider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <ThemeProvider theme={defaultTheme}>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </ThemeProvider>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

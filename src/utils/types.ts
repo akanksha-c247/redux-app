@@ -5,7 +5,6 @@ export interface InputProps {
   onChange: (newValue: string) => void;
 }
 
-export interface SearchAppBarProps {}
 
 export interface SignInFormData {
   email: string;
@@ -13,6 +12,7 @@ export interface SignInFormData {
 }
 
 export interface SignUpFormData {
+  agreeTerms: any;
   firstName: string;
   lastName: string;
   email: string;
@@ -59,7 +59,7 @@ export interface UserState {
   todosPerPage: number;
   currentPage: number;
   loading: boolean;
-  loggedInUser: User[];
+  loggedInUser: SignInFormData[];
   isAuthenticated: boolean;
 }
 

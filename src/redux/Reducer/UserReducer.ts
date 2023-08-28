@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Todo, User, UserState } from '../../utils/types';
+import { SignInFormData, Todo, User, UserState } from '../../utils/types';
 import { ActionTypes } from '../../utils/constant';
 import { fetchTodosThunk } from '../services/todosThunk';
 
@@ -52,7 +52,7 @@ const userSlice = createSlice({
     addSignupReducer: (state, action: PayloadAction<Todo>) => {
       state.userList.push(action.payload);
     },
-    addSignReducer: (state, action: PayloadAction<User>) => {
+    addSignReducer: (state, action: PayloadAction<SignInFormData>) => {
       state.loggedInUser.push(action.payload);
     },
     logOutReducer: (state) => {

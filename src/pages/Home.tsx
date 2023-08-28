@@ -8,19 +8,17 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Button, Grid} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   deleteUser,
   onNavigatePrev,
   onChangePrevPerPage,
   onClickCurrentPage,
-  logOutReducer,
   onNaviGateOnNext,
 } from '../redux/Reducer/UserReducer';
 import { useAppDispatch, useAppSelector } from '../redux/reduxHooks';
 import { fetchTodosThunk } from '../redux/services/todosThunk';
 import { ACTION, COMPLETED, DELETE, EDIT, GET_FETCH_URL, ID, NEXT, OF, PAGE, PREV, TITLE } from '../utils/constant';
-import Header from '../components/header/Header';
 import { useTranslation } from 'react-i18next';
 
 
@@ -28,9 +26,7 @@ const Home: React.FC = () => {
   const todos = useAppSelector((state) => state?.USERS?.todos);
   const todosPerPage = useAppSelector((state) => state?.USERS?.todosPerPage);
   const currentPage = useAppSelector((state) => state?.USERS?.currentPage);
-  const users = useAppSelector((state) => state?.USERS?.loggedInUser);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const {t} = useTranslation(['home']);
 
   useEffect(() => {
@@ -66,20 +62,14 @@ const Home: React.FC = () => {
     dispatch(deleteUser({ id }));
   };
 
-  const handleLogout = () => {
-    dispatch(logOutReducer());
-    navigate('/');
-  };
-
   return (
     <div>
-      <Header onLogout={handleLogout}/>
       <h1>{t('home:Home')}</h1>
       <Paper elevation={3} style={{ padding: '16px' }}>
         <Grid item xs={12} md={3}>
         </Grid>
         <div>
-          <span onClick={navigatePrev} style={{ cursor: 'pointer' }}>
+          <span onClick={navigatePrev} style={{ cursor: 'pointer' }} data-testid="navigate">
             {PREV}
           </span>
           <p>

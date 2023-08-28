@@ -47,9 +47,7 @@ export const Create: React.FC = () => {
     const user: Todo = {id: id ? +id : newUserId,
       title: formData.title,
       completed: formData.completed,
-      userId: loggedInUser && loggedInUser[0] && loggedInUser[0].customId
-        ? loggedInUser[0].customId
-        : newUserId,
+      userId: id ? +id : newUserId,
       data: [],
       password: '',
       email: '',

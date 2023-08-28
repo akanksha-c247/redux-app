@@ -1,43 +1,28 @@
-/* eslint-disable indent */
-/* eslint-disable quotes */
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from 'react';
 import {
   AppBar,
   Toolbar,
   IconButton,
   Button,
+  Typography,
   Menu,
   MenuItem,
-  Typography,
-} from "@mui/material";
-import { Suspense } from "react";
-import { Search as SearchIcon } from "@mui/icons-material";
-import { Search, StyledInputBase } from "../searchBarTheme";
-import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks";
-import { filterUsers } from "../../redux/Reducer/UserReducer";
-import { CREATE, WELCOME } from "../../utils/constant";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import i18next from "i18next";
-
-interface HeaderProps {
-  onLogout: () => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ onLogout }) => {
+} from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../../redux/reduxHooks';
+import { filterUsers, logOutReducer } from '../../redux/Reducer/UserReducer';
+import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
+import { StyledInputBase } from '../searchBarTheme';
+import './header.scss';
+const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const dispatch = useAppDispatch();
   const users = useAppSelector((state) => state?.USERS?.loggedInUser);
-  const { t } = useTranslation(["common"]);
-
-  useEffect(() => {
-    const storedLanguage = localStorage.getItem('i18nextLng');
-    if (storedLanguage && storedLanguage.length > 2) {
-      i18next.changeLanguage('en');
-    }
-  }, []);
-
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+ 
   const handleLanguageMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -47,12 +32,8 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   };
 
   const handleLanguageSelect = (language: string) => {
-    console.log(`Selected language: ${language}`);
+    i18next.changeLanguage(language);
     handleLanguageMenuClose();
-  };
-
-  const handleLangaugeChange = (e: any) => {
-    i18next.changeLanguage(e.target.value);
   };
 
   const filterUser = () => {
@@ -61,68 +42,59 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
       dispatch(filterUsers(inputValue));
     }
   };
-
-  const firstName = users?.length > 0 ? users[0]?.firstName : null;
+  const onLogout = () => {
+    dispatch(logOutReducer());
+    navigate('/');
+  };
 
   return (
     <AppBar position="static">
       <Toolbar>
         <IconButton color="inherit">
           <StyledInputBase
-            placeholder="Search…"
-            inputProps={{ "aria-label": "search" }}
+            placeholder={t('searchPlaceholder')}
+            inputProps={{ 'aria-label': 'search' }}
             onChange={filterUser}
             inputRef={inputRef}
             data-testId="inputBox"
           />
         </IconButton>
-        <div>
+        <div className='langauage'>
           <Button color="inherit" onClick={handleLanguageMenuOpen}>
-            Language
+            {t('language')}
           </Button>
           <Menu
-            value={localStorage.getItem("i18nextLng")}
-            anchorEl={anchorEl}c
+            anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleLanguageMenuClose}
-            onChange={handleLangaugeChange}
           >
             <MenuItem
-              onClick={() => handleLanguageSelect("en")}
-              selected={localStorage.getItem("i18nextLng") === "en"}
+              onClick={() => handleLanguageSelect('en')}
+              selected={i18next.language === 'en'}
             >
-              English
+              {t('english')}
             </MenuItem>
             <MenuItem
-              onClick={() => handleLanguageSelect("fr")}
-              selected={localStorage.getItem("i18nextLng") === "fr"}
+              onClick={() => handleLanguageSelect('fr')}
+              selected={i18next.language === 'fr'}
             >
-              French
+              {t('french')}
             </MenuItem>
-            <MenuItem
-              onClick={() => handleLanguageSelect("es")}
-              selected={localStorage.getItem("i18nextLng") === "es"}
-            >
-              Spanish
-            </MenuItem>
+            {/* Add other languages */}
           </Menu>
           <Button color="inherit" onClick={onLogout}>
-            {t("logout")}
+            {t('logout')}
           </Button>
           <Link
             to="/create"
-            style={{
-              marginBottom: "16px",
-              display: "block",
-              color: "#fff",
-            }}
+            className='create'
           >
-            <Button variant="contained" style={{ backgroundColor: "#4caf50" }}>
-              {CREATE}+
+            <Button variant="contained" style={{ backgroundColor: '#4caf50' }} >
+              {t('create')}+
             </Button>
           </Link>
           <Typography variant="subtitle1" gutterBottom>
-            {WELCOME}, {firstName}
+            {t('welcome')}
           </Typography>
         </div>
       </Toolbar>
