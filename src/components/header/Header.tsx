@@ -37,11 +37,12 @@ const Header: React.FC = () => {
   };
 
   const filterUser = () => {
-    const inputValue = inputRef.current?.value;
+    const inputValue = inputRef?.current?.value;
     if (inputValue) {
       dispatch(filterUsers(inputValue));
     }
   };
+
   const onLogout = () => {
     dispatch(logOutReducer());
     navigate('/');
@@ -56,10 +57,10 @@ const Header: React.FC = () => {
             inputProps={{ 'aria-label': 'search' }}
             onChange={filterUser}
             inputRef={inputRef}
-            data-testId="inputBox"
+            data-testid="inputBox"
           />
         </IconButton>
-        <div className='langauage'>
+        <div className='language'>
           <Button color="inherit" onClick={handleLanguageMenuOpen}>
             {t('language')}
           </Button>
@@ -71,6 +72,7 @@ const Header: React.FC = () => {
             <MenuItem
               onClick={() => handleLanguageSelect('en')}
               selected={i18next.language === 'en'}
+              className='english'
             >
               {t('english')}
             </MenuItem>

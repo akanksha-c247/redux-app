@@ -23,6 +23,7 @@ describe('SignIn Component', () => {
   let mockDispatch: jest.Mock;
   let mockStore: any; 
   let mockNavigate: jest.Mock;
+  
   beforeEach(() => {
     mockDispatch = jest.fn();
     mockNavigate = jest.fn();
@@ -96,11 +97,11 @@ describe('SignIn Component', () => {
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it('Test case for Email and Password fields regix validat of signIn', async () => {
+  it('Test case for Email and Password fields regex validate of signIn', async () => {
     const emailNameInput = screen.getByRole('textbox', { name: 'Email Address' });
     const passwordInput = screen.getByLabelText(/password/i) as HTMLInputElement;
     userEvent.type(emailNameInput, 'akk5555');
-    userEvent.type(passwordInput, 'fgdfgfgfgf');
+    userEvent.type(passwordInput, 'akanksha');
     const signInButton = screen.getByRole('button', { name: /Sign in/i }); 
     userEvent.click(signInButton); 
     expect(await screen.findByText('Invalid email format.')).toBeInTheDocument();

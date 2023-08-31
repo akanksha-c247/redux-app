@@ -38,6 +38,7 @@ describe('SignUp Component', () => {
       </Provider>
     );
   });
+
   afterEach(() => {
     jest.clearAllMocks(); // Clear mock calls after each test
   });
@@ -56,6 +57,7 @@ describe('SignUp Component', () => {
     userEvent.click(checkbox); // Check the checkbox
     userEvent.click(screen.getByRole('button', { name: 'Sign up' }));
     expect(useAppDispatch).toHaveBeenCalled();
+    
     await waitFor(() => {
       // Verify that the correct action was dispatched
       const expectedTodo: Todo = {
