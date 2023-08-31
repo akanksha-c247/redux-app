@@ -1,13 +1,11 @@
 import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
-import {
-  fireEvent,
-  render,
-  screen,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { BrowserRouter, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/reduxHooks';
+import Home from '../../pages/Home';
+import userEvent from '@testing-library/user-event';
 import {
   deleteUser,
   onChangePrevPerPage,
@@ -15,8 +13,6 @@ import {
   onNaviGateOnNext,
   onNavigatePrev,
 } from '../../redux/Reducer/UserReducer';
-import Home from '../../pages/Home';
-import { fetchTodosThunk } from '../../redux/services/todosThunk';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -29,100 +25,114 @@ jest.mock('../../redux/reduxHooks', () => ({
   useAppSelector: jest.fn(),
 }));
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: any) => key }),
+}));
+
 describe('SignIn Component', () => {
   let mockDispatch: jest.Mock;
   let mockStore: any;
   let mockNavigate: jest.Mock;
+
   beforeEach(() => {
     mockDispatch = jest.fn();
     mockNavigate = jest.fn();
 
-    mockStore = configureMockStore(); // Create a mock store
+    const mockStore = configureMockStore();
     const initialState = {
       USERS: {
-        userList: [
-          // Your mock user data
-          { email: 'test@example.com', password: 'John@123' },
-        ],
+        todos: [{ id: 1, title: 'Learn React', completed: false }],
+        todosPerPage: 10,
+        currentPage: 1,
       },
     };
+
+    const mockReduxStore = mockStore(initialState);  // Initialize mockReduxStore here
+
     (useAppDispatch as jest.Mock).mockReturnValue(mockDispatch);
     (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
-    (useAppSelector as jest.Mock).mockImplementation((selector) =>
-      selector(initialState)
-    );
-    const mockReduxStore = mockStore(initialState); // Initialize the mock store
-
+    (useAppSelector as jest.Mock).mockImplementation((selector) => selector(initialState));
+    
     render(
       <Provider store={mockReduxStore}>
-        <Home />
+        <BrowserRouter>
+          <Home />
+        </BrowserRouter>
       </Provider>
     );
   });
+
   afterEach(() => {
-    jest.clearAllMocks(); // Clear mock calls after each test
+    jest.clearAllMocks();
   });
 
-  it('should render the sign-in form correctly', async () => {
-    fireEvent.click(screen.getByTestId(''));
-    expect(mockDispatch).toHaveBeenCalledTimes(1);
-    //Log to check
-    console.log('Sign in mockDispatch calls:', mockDispatch.mock.calls);
-    const dispatchedAction = mockDispatch.mock.calls[0][0];
-    console.log('Dispatched action payload:', dispatchedAction.payload);
-
-    // You can write assertions based on your use case
-    expect(mockDispatch).toHaveBeenCalledWith(fetchTodosThunk('GET_FETCH_URL'));
+  it('should render the Home page correctly and navigate to previous page when Prev is clicked', async () => {
+    // Test for heading
+    expect(
+      screen.getByRole('heading', { name: /home:Home/i })
+    ).toBeInTheDocument();
+    expect(screen.getByText(/ID/)).toBeInTheDocument();
+    expect(screen.getByText(/Title/)).toBeInTheDocument();
+    expect(screen.getByText(/Completed/)).toBeInTheDocument();
+    expect(screen.getByText(/Action/)).toBeInTheDocument();
+    const prevSpan = screen.getByText(/Prev/i); // Replace this with the actual text or use the most appropriate query
+    userEvent.click(prevSpan);
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('Learn React')).toBeInTheDocument();
+    expect(screen.getByText('No')).toBeInTheDocument();
+    // Test if the dispatch was called
+    expect(mockDispatch).toHaveBeenCalled();
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'users/onNavigatePrev',
+      })
+    );
   });
-  it('dispatches onNaviGateOnNext when currentPage < total_page', () => {
-    const currentPage = 2; // Set a value for currentPage
-    const totalPage = 5; // Set a value for total_page
-    const navigateNextButton = screen.getByText('Navigate Next'); // Adjust the text as per your component
-    fireEvent.click(navigateNextButton);
-    if (currentPage < totalPage) {
-      expect(mockDispatch).toHaveBeenCalledWith(onNaviGateOnNext());
-    } else {
-      expect(mockDispatch).not.toHaveBeenCalled(); // Ensure no action is dispatched when currentPage >= totalPage
-    }
-  });
-  it('dispatches onClickCurrentPage when a page is clicked', () => {
-    const pages = [1, 2, 3, 4, 5]; // Provide an array of pages
-    pages.forEach((page) => {
-      const pageElement = screen.getByText(page.toString());
-      fireEvent.click(pageElement);
 
-      // Verify if the onClickCurrentPage action was dispatched with the correct page number
-      expect(mockDispatch).toHaveBeenCalledWith(onClickCurrentPage(page));
+  it('renders page numbers correctly', () => {
+    // Assuming page 1 is displayed as initial page
+    expect(screen.getByText('1')).toBeInTheDocument();
+  });
+
+  it('changes page when a page number is clicked', async () => {
+    const pageNumber = screen.getByText('2'); // Assuming that page 2 is available
+    userEvent.click(pageNumber);
+
+    await waitFor(() => {expect(mockDispatch).toHaveBeenCalledWith(
+      onClickCurrentPage(2)); // Assuming onClickCurrentPage is your action creator
     });
   });
-  it('dispatches deleteUser when the delete button is clicked', () => {
-    const rowId = 123; // Provide a sample row ID
-    const deleteButton = screen.getByText('Delete'); // Adjust the text as per your component
-    fireEvent.click(deleteButton);
 
-    // Verify if the deleteUser action was dispatched with the correct ID
-    expect(mockDispatch).toHaveBeenCalledWith(deleteUser({ id: rowId }));
+  it('navigates to the previous page when "Prev" is clicked', async () => {
+    const prevButton = screen.getByText('Prev'); 
+    userEvent.click(prevButton);
+
+    await waitFor(() => {expect(mockDispatch).toHaveBeenCalledWith(
+      (onNavigatePrev())); // Assuming onNavigatePrev is your action creator
+    });
   });
-  it('dispatches onChangePrevPerPage when an option is selected', () => {
-    // Simulate changing the select option
+
+  it('navigates to the next page when "Next" is clicked', async () => {
+    const nextButton = screen.getByText(/Next/);
+    userEvent.click(nextButton);
+    await waitFor(() => {
+      expect(mockDispatch).toHaveBeenCalledWith(onNaviGateOnNext());
+    });
+  });    
+
+  it('deletes a user when the delete button is clicked', async () => {
+    const deleteButton = screen.getByText(/Delete/);
+    userEvent.click(deleteButton);
+
+    await waitFor(() => {expect(mockDispatch).toHaveBeenCalledWith(
+      deleteUser({ id: 1 }));
+    });
+  });
+  it('changes todosPerPage when a new option is selected', async () => {
     const selectElement = screen.getByRole('combobox');
-    fireEvent.change(selectElement, { target: { value: '50' } }); // Select the option with value 50
-
-    // Verify if the onChangePrevPerPage action was dispatched with the correct value
-    expect(mockDispatch).toHaveBeenCalledWith(onChangePrevPerPage(50));
+    userEvent.selectOptions(selectElement, ['50']);
+    await waitFor(() => {
+      expect(mockDispatch).toHaveBeenCalledWith(onChangePrevPerPage(50));
+    });
   });
-  it('dispatches onNavigatePrev when span is clicked and currentPage is not null', () => {
-    const currentPage = 2; // Set a value for currentPage
-    // Simulate clicking the span element
-    const navigateSpan = screen.getByTestId('navigate');
-    fireEvent.click(navigateSpan);
-
-    // Verify if the onNavigatePrev action was dispatched when currentPage is not null
-    if (currentPage !== null) {
-      expect(mockDispatch).toHaveBeenCalledWith(onNavigatePrev());
-    } else {
-      expect(mockDispatch).not.toHaveBeenCalled(); // Ensure no action is dispatched when currentPage is null
-    }
-  });
-  // Add more test cases as needed
 });

@@ -69,12 +69,14 @@ const Home: React.FC = () => {
         <Grid item xs={12} md={3}>
         </Grid>
         <div>
-          <span onClick={navigatePrev} style={{ cursor: 'pointer' }} data-testid="navigate">
+          <span onClick={navigatePrev} style={{ cursor: 'pointer' }}>
             {PREV}
           </span>
           <p>
             {pages.map((_p) => (
               <span
+                role="button" // Setting role to button
+                aria-label={String(_p)} // Providing an accessible name
                 key={_p}
                 onClick={() => handleCurrentPage(_p)}
                 style={{

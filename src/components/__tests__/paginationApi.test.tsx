@@ -26,6 +26,6 @@ describe('genericApiCall', () => {
     const errorMessage = 'Failed to fetch data';
     mockAxios.onGet().reply(500, { message: errorMessage });
 
-    await expect(genericApiCall<any>()).rejects.toThrow(errorMessage);
+    await expect(genericApiCall<any>()).rejects.toThrowError(errorMessage);
   });
 });
