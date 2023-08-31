@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
-import { act, fireEvent,render ,screen, waitFor } from '@testing-library/react';
+import {render ,screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
@@ -54,96 +54,58 @@ describe('SignIn Component', () => {
   it('should render the sign-in form correctly', async () => {
 
     // Simulate user input
-    const emailNameInput = screen.getByRole('textbox', { name: 'Email Address' });
-    const passwordInput = screen.getByLabelText(/password/i) as HTMLInputElement;
-    const checkbox = screen.getByRole('checkbox', { name: 'Remember me' });
-    const signInButton = screen.getByText(/Sign In/i);
-    
-    //Assert to check form renderning correct
-    expect(emailNameInput).toBeInTheDocument();
-    expect(passwordInput).toBeInTheDocument();
-    expect(checkbox).toBeInTheDocument();
-    expect(signInButton).toBeInTheDocument();
+    expect(screen.getByRole('textbox',{name: 'Email Address'})).toBeInTheDocument();
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: 'Remember me' })).toBeInTheDocument();
+    expect(screen.getByRole( 'button', { name: /Sign in/i })).toBeInTheDocument();
     
   });
 
   it('should handle sign-in with valid credentials', async () => {
-    
     // Simulate user input
     const emailNameInput = screen.getByRole('textbox', { name: 'Email Address' });
     const passwordInput = screen.getByLabelText(/password/i) as HTMLInputElement;
     const checkbox = screen.getByRole('checkbox', { name: 'Remember me' });
    
-    
-    act(() => {
-      userEvent.type(emailNameInput, 'test@example.com');
-      fireEvent.change(passwordInput, { target: { value: 'John@123' } });
-      userEvent.click(checkbox); // Check the checkbox
-      //userEvent.type(screen.getByLabelText('Password'), 'John@123');
-    });
-    fireEvent.submit(screen.getByTestId('handleSubmit')); 
+    userEvent.type(emailNameInput, 'test@example.com');
+    userEvent.type(passwordInput, 'John@123');
+    userEvent.click(checkbox);
+    const signInButton = screen.getByRole('button', { name: /Sign in/i }); 
+    userEvent.click(signInButton); 
     //Below line to check dispatch is called from test or not after calling above line 
-    expect(mockDispatch).toHaveBeenCalledTimes(1);
-    //Log to check
-    console.log('Sign in mockDispatch calls:', mockDispatch.mock.calls);
-    const dispatchedAction = mockDispatch.mock.calls[0][0];
-    console.log('Dispatched action payload:', dispatchedAction.payload);
-
+    expect(mockDispatch).toHaveBeenCalledTimes(1);  
     // You can write assertions based on your use case
     expect(useAppDispatch).toHaveBeenCalled();
-
-    await waitFor(() => {
-      // Verify that the correct action was dispatched
-      // Check if the mock action was dispatched
-      expect(mockDispatch).toHaveBeenCalledWith(
-        addSignReducer({
-          email: 'test@example.com',
-          password: 'John@123',
-        })
-      );
+    await waitFor(() => {expect(mockDispatch).toHaveBeenCalledWith(
+      addSignReducer({
+        email: 'test@example.com',
+        password: 'John@123',
+      })
+    );
     });
 
   });
 
-
-  it('Test case for required fields of signIn', async () => {
-     
+  it('Test case for required fields of signIn', async () => { 
     // Simulate user input
-    act(() => {
-      fireEvent.submit(screen.getByTestId('handleSubmit'));
-    });
+    userEvent.click(screen.getByRole('button', { name: /Sign in/i })); 
     // Check for validation error messages
     expect(await screen.findByText('Email is required.')).toBeInTheDocument();
     expect(await screen.findByText('Password is required.')).toBeInTheDocument();
-    //expect(await screen.findByText('You must agree to the terms.')).toBeInTheDocument();
-
     expect(mockDispatch).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
-
   });
 
   it('Test case for Email and Password fields regix validat of signIn', async () => {
-    // Simulate user input
     const emailNameInput = screen.getByRole('textbox', { name: 'Email Address' });
     const passwordInput = screen.getByLabelText(/password/i) as HTMLInputElement;
- 
-    //Act 
-    act(() => {
-      userEvent.type(emailNameInput, 'akk5555');
-      fireEvent.change(passwordInput, { target: { value: 'fgdfgfgfgf' } });
-      //userEvent.type(screen.getByLabelText('Password'), 'John@123');
-    });
-    // Simulate user input
-    act(() => {
-      fireEvent.submit(screen.getByTestId('handleSubmit'));
-    });
-    // Check for validation error messages
+    userEvent.type(emailNameInput, 'akk5555');
+    userEvent.type(passwordInput, 'fgdfgfgfgf');
+    const signInButton = screen.getByRole('button', { name: /Sign in/i }); 
+    userEvent.click(signInButton); 
     expect(await screen.findByText('Invalid email format.')).toBeInTheDocument();
-    //expect(await screen.findByText('You must agree to the terms.')).toBeInTheDocument();
     expect(await screen.findByText('Password must be at least 8 characters and contain a letter and a number.')).toBeInTheDocument();
     expect(mockDispatch).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
-
   });
-
 });

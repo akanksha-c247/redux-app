@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
-import { Provider, useDispatch } from 'react-redux';
-import { act, fireEvent,render ,screen, waitFor } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import {render ,screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
@@ -42,40 +42,20 @@ describe('SignUp Component', () => {
     jest.clearAllMocks(); // Clear mock calls after each test
   });
 
-
-
   it('submits the form with correct data', async () => {
-    
     // Simulate user input
     const firstNameInput = screen.getByRole('textbox', { name: 'First Name' });
     const LastNameInput = screen.getByRole('textbox', { name: 'Last Name' });
     const emailNameInput = screen.getByRole('textbox', { name: 'Email Address' });
     const passwordInput = screen.getByLabelText(/password/i) as HTMLInputElement;
     const checkbox = screen.getByRole('checkbox', { name: 'I want to receive inspiration, marketing promotions and updates via email.' });
-    //Act 
-    act(() => {
-      userEvent.type(firstNameInput, 'John');
-      userEvent.type(LastNameInput, 'akk');
-      userEvent.type(emailNameInput, 'akk@g.com');
-      fireEvent.change(passwordInput, { target: { value: 'John@123' } });
-      userEvent.click(checkbox); // Check the checkbox
-      //userEvent.type(screen.getByLabelText('Password'), 'John@123');
-    });
-    console.log('checkbox',checkbox);
-  
-    act(() => {
-      fireEvent.submit(screen.getByTestId('handleSubmit'));
-    });
-
-    //Log to check
-    console.log('mockDispatch calls:', mockDispatch.mock.calls);
-    const dispatchedAction = mockDispatch.mock.calls[0][0];
-    console.log('Dispatched action payload:', dispatchedAction.payload);
-
-
-    // You can write assertions based on your use case
+    userEvent.type(firstNameInput, 'John');
+    userEvent.type(LastNameInput, 'akk');
+    userEvent.type(emailNameInput, 'akk@g.com');
+    userEvent.type(passwordInput, 'John@123');
+    userEvent.click(checkbox); // Check the checkbox
+    userEvent.click(screen.getByRole('button', { name: 'Sign up' }));
     expect(useAppDispatch).toHaveBeenCalled();
-
     await waitFor(() => {
       // Verify that the correct action was dispatched
       const expectedTodo: Todo = {
@@ -91,53 +71,35 @@ describe('SignUp Component', () => {
         data: [],
         error: '',
       };
-      
       expect(mockDispatch).toHaveBeenCalledWith(addSignupReducer(expectedTodo));
     });
-
   });
 
-
   it('Test case for required fields of signup', async () => {
-     
-    // Simulate user input
-    act(() => {
-      fireEvent.submit(screen.getByTestId('handleSubmit'));
-    });
+    userEvent.click(screen.getByRole('button', { name: 'Sign up' }));
     // Check for validation error messages
     expect(await screen.findByText('First name is required.')).toBeInTheDocument();
     expect(await screen.findByText('Last name is required.')).toBeInTheDocument();
     expect(await screen.findByText('Email is required.')).toBeInTheDocument();
     expect(await screen.findByText('Password is required.')).toBeInTheDocument();
     expect(await screen.findByText('You must agree to the terms.')).toBeInTheDocument();
-
     expect(mockDispatch).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
-
   });
 
   it('Test case for Email and Password fields regix validat of signup', async () => {
     // Simulate user input
     const emailNameInput = screen.getByRole('textbox', { name: 'Email Address' });
     const passwordInput = screen.getByLabelText(/password/i) as HTMLInputElement;
- 
-    //Act 
-    act(() => {
-      userEvent.type(emailNameInput, 'akk5555');
-      fireEvent.change(passwordInput, { target: { value: 'fgdfgfgfgf' } });
-      //userEvent.type(screen.getByLabelText('Password'), 'John@123');
-    });
-    // Simulate user input
-    act(() => {
-      fireEvent.submit(screen.getByTestId('handleSubmit'));
-    });
+    userEvent.type(emailNameInput, 'akk5555');
+    userEvent.type(passwordInput, 'fgdfgfgfgf');
+    userEvent.click(screen.getByRole('button', { name: 'Sign up' }));
+
     // Check for validation error messages
     expect(await screen.findByText('Invalid email format.')).toBeInTheDocument();
     expect(await screen.findByText('You must agree to the terms.')).toBeInTheDocument();
     expect(await screen.findByText('Password must be at least 8 characters and contain a letter and a number.')).toBeInTheDocument();
     expect(mockDispatch).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
-
   });
-
 });
