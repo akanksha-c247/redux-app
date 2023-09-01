@@ -24,7 +24,7 @@ describe('useAppDispatch', () => {
 describe('useAppSelector', () => {
   it('should return the selected value from useSelector', () => {
     const selectedValue = 'selectedValue';
-    const mockSelector = jest.fn((state: RootState) => selectedValue);
+    const mockSelector = jest.fn(() => selectedValue);
     (originalUseSelector as jest.Mock).mockReturnValue(selectedValue);
 
     const { result } = renderHook(() => useAppSelector(mockSelector));
