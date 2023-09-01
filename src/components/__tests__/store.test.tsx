@@ -22,6 +22,12 @@ describe('Redux Store Configuration', () => {
       USERS: {
         userList: [],
         todos: [],
+        currentPage: 1,
+        isAuthenticated: false,
+        loading: false,
+        loggedInUser: [],
+        originalTodos: [],
+        todosPerPage: 20,
       },
     };
 
