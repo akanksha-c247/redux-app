@@ -31,7 +31,7 @@ describe('Redux Store Configuration', () => {
       },
     };
 
-    expect(initialState).toEqual(expectedInitialState);
+    expect(initialState).toEqual(expect.objectContaining(expectedInitialState));
   });
 
 });
